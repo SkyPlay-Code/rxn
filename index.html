@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RXN//BOARD — Class 12 Organic Chemistry</title>
+<style>
+:root{
+  --bg:#0b0e14; --bg2:#10141f; --panel:#151a28; --panel2:#1b2133;
+  --line:#26304a; --txt:#e8ecf6; --mut:#8b94ad; --acc:#5eead4; --acc2:#f0abfc;
+  --warn:#fbbf24; --bad:#fb7185; --good:#4ade80;
+  --mono:'JetBrains Mono','Fira Code',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.55;overflow-x:hidden}
+::selection{background:var(--acc);color:#06251f}
+h1,h2,h3{letter-spacing:-.02em}
+a{color:var(--acc);text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+nav{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.navin{display:flex;align-items:center;gap:6px;max-width:1180px;margin:0 auto;padding:10px 20px;overflow-x:auto}
+.logo{font-family:var(--mono);font-weight:700;color:var(--acc);white-space:nowrap;margin-right:14px;font-size:15px}
+.logo b{color:var(--acc2)}
+nav a.nl{color:var(--mut);font-size:13px;padding:7px 12px;border-radius:8px;white-space:nowrap;transition:.2s}
+nav a.nl:hover,nav a.nl.on{color:var(--txt);background:var(--panel2)}
+
+header{padding:64px 0 40px;position:relative}
+header .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+@media(max-width:860px){header .wrap{grid-template-columns:1fr}}
+.kick{font-family:var(--mono);font-size:12px;color:var(--acc);letter-spacing:.25em;text-transform:uppercase}
+h1{font-size:clamp(34px,5vw,56px);line-height:1.05;margin:14px 0 16px}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);max-width:520px;font-size:16px}
+.cta{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid var(--line);cursor:pointer;transition:.2s;background:var(--panel);color:var(--txt)}
+.btn.pri{background:var(--acc);color:#052723;border-color:transparent}
+.btn.pri:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.btn:hover{transform:translateY(-2px)}
+.heroCard{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:16px;padding:22px;font-family:var(--mono);font-size:13px;color:var(--mut)}
+.heroCard .eq{color:var(--acc);margin:6px 0;font-size:14px}
+.heroCard .tag{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--acc2);margin:2px 4px 2px 0}
+
+section{padding:56px 0}
+.secH{margin-bottom:26px}
+.secH h2{font-size:clamp(24px,3vw,34px)}
+.secH p{color:var(--mut);margin-top:6px;max-width:640px}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--mut);font-size:13px;cursor:pointer;transition:.15s;user-select:none}
+.chip:hover{color:var(--txt)}
+.chip.on{background:var(--acc);color:#052723;border-color:transparent;font-weight:600}
+.search{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:11px 16px;font-size:14px;margin-bottom:18px;font-family:var(--mono)}
+.search:focus{outline:none;border-color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;transition:.2s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--acc);transform:translateY(-3px)}
+.card h3{font-size:16px;margin-bottom:4px}
+.card .cat{font-size:11px;font-family:var(--mono);color:var(--acc2);text-transform:uppercase;letter-spacing:.12em}
+.card .eq{font-family:var(--mono);font-size:12.5px;color:var(--acc);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:10px 0;overflow-x:auto;white-space:nowrap}
+.card p{font-size:13px;color:var(--mut)}
+.card .cond{margin-top:8px;font-size:12px;font-family:var(--mono);color:var(--warn)}
+.card .star{position:absolute;top:14px;right:14px;color:var(--warn);cursor:pointer;font-size:17px;user-select:none}
+.hidden{display:none!important}
+
+.mechTabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.mechStage{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;overflow-x:auto}
+.mechStage svg{display:block;margin:0 auto;max-width:100%}
+.stepBar{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.stepBar .lbl{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.mechNote{margin-top:14px;font-size:13.5px;color:var(--mut);background:var(--bg);border-left:3px solid var(--acc);padding:10px 14px;border-radius:0 8px 8px 0;min-height:44px}
+.arrowPath{stroke-dasharray:8 6;animation:dash 1.1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-14}}
+
+.mapWrap{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;overflow-x:auto}
+.mapWrap svg{min-width:900px;display:block;margin:0 auto}
+.stn{cursor:pointer}
+.stn circle{fill:var(--panel2);stroke:var(--line);stroke-width:2;transition:.2s}
+.stn:hover circle{stroke:var(--acc)}
+.stn.selA circle{stroke:var(--acc);stroke-width:3;fill:#0e3a33}
+.stn.selB circle{stroke:var(--acc2);stroke-width:3;fill:#33122e}
+.stn text{fill:var(--txt);font-size:11.5px;font-family:var(--mono);text-anchor:middle;pointer-events:none}
+.edge{stroke:var(--line);stroke-width:2;fill:none}
+.edge.hit{stroke:var(--acc);stroke-width:3}
+.edgeLbl{fill:var(--mut);font-size:9.5px;font-family:var(--mono)}
+.routeBox{margin-top:16px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px}
+.routeBox h4{font-family:var(--mono);font-size:13px;color:var(--acc);margin-bottom:10px}
+.routeBox ol{margin-left:20px;font-size:14px}
+.routeBox li{margin:5px 0}
+.routeBox .none{color:var(--mut);font-size:13.5px}
+.mapHint{font-size:12.5px;color:var(--mut);margin-top:10px;font-family:var(--mono)}
+
+.matrixWrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:13px 16px;text-align:left;font-size:13.5px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--mut);background:var(--bg2)}
+tr:last-child td{border-bottom:none}
+td.rname{font-family:var(--mono);color:var(--acc);white-space:nowrap}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:700;font-family:var(--mono)}
+.pill.ox{background:rgba(251,113,133,.14);color:var(--bad)}
+.pill.rd{background:rgba(74,222,128,.14);color:var(--good)}
+.pill.sub{background:rgba(94,234,212,.14);color:var(--acc)}
+.pill.el{background:rgba(240,171,252,.14);color:var(--acc2)}
+.pill.dia{background:rgba(251,191,36,.14);color:var(--warn)}
+
+.testGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.testCard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.testCard h3{font-size:15.5px;margin-bottom:2px}
+.testCard .for{font-size:12px;color:var(--acc2);font-family:var(--mono);margin-bottom:10px}
+.testCard .obsPos{color:var(--good);font-size:13.5px;margin-top:8px}
+.testCard .obsNeg{color:var(--mut);font-size:13px;margin-top:4px}
+.testCard .reag{font-family:var(--mono);font-size:12px;color:var(--warn);margin-top:8px}
+
+.flashZone{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+@media(max-width:860px){.flashZone{grid-template-columns:1fr}}
+.fcCard{background:linear-gradient(160deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:34px 26px;min-height:220px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;transition:.35s;transform-style:preserve-3d;position:relative}
+.fcCard .q{font-size:19px;font-weight:600;text-align:center}
+.fcCard .a{font-size:14px;color:var(--mut);text-align:center;margin-top:12px;display:none}
+.fcCard.flip .a{display:block}
+.fcCard .hint{position:absolute;bottom:10px;right:14px;font-size:11px;color:var(--mut);font-family:var(--mono)}
+.fcCtrl{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.deckList{display:flex;flex-direction:column;gap:8px}
+.deckItem{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:14px;cursor:pointer;transition:.15s}
+.deckItem:hover{border-color:var(--acc)}
+.deckItem .cnt{font-family:var(--mono);font-size:12px;color:var(--mut)}
+
+footer{border-top:1px solid var(--line);padding:30px 0 46px;color:var(--mut);font-size:13px;text-align:center}
+footer .mono{font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<nav><div class="navin">
+  <span class="logo">RXN<b>//</b>BOARD</span>
+  <a class="nl" href="#library">Library</a>
+  <a class="nl" href="#mech">Mechanisms</a>
+  <a class="nl" href="#map">Conversion Map</a>
+  <a class="nl" href="#matrix">Reagent Matrix</a>
+  <a class="nl" href="#tests">Distinction Tests</a>
+  <a class="nl" href="#flash">Flashcards</a>
+</div></nav>
+
+<header><div class="wrap">
+  <div>
+    <div class="kick">Class 12 · CBSE / State Boards · Organic Chemistry</div>
+    <h1>Every named reaction,<br><em>one fast revision deck.</em></h1>
+    <p class="sub">A filterable library of board-syllabus reactions, animated curved-arrow mechanisms, a subway-style conversion map, a selective reagent matrix, and distinction tests — built for speed, not anxiety. No university-tier retrosynthesis, no laggy sketchers, no blurry scans.</p>
+    <div class="cta">
+      <a class="btn pri" href="#library">Open the Library →</a>
+      <a class="btn" href="#map">Trace a Conversion</a>
+    </div>
+  </div>
+  <div class="heroCard">
+    <div style="color:var(--txt);font-weight:700;margin-bottom:6px">Tonight's revision queue</div>
+    <div class="eq">Ph–N₂⁺Cl⁻ <span style="color:var(--mut)">—CuCl/HCl→</span> Ph–Cl</div>
+    <div class="eq">R–OH <span style="color:var(--mut)">—PCC→</span> R–CHO <span style="color:var(--mut)">(stops here)</span></div>
+    <div class="eq">R–CHO <span style="color:var(--mut)">—Tollens'→</span> R–COO⁻ + Ag↓</div>
+    <div style="margin-top:10px">
+      <span class="tag">Haloalkanes</span><span class="tag">Alcohols</span><span class="tag">Carbonyls</span><span class="tag">Amines</span><span class="tag">Biomolecules</span>
+    </div>
+  </div>
+</div></header>
+
+<section id="library"><div class="wrap">
+  <div class="secH"><h2>Reaction Library</h2><p>Filter by chapter or search by name / reagent. Conditions are always shown — no half-written schemes.</p></div>
+  <input class="search" id="rxnSearch" placeholder="Search: e.g. 'Sandmeyer', 'KMnO₄', 'phenol'…">
+  <div class="filters" id="rxnFilters"></div>
+  <div class="grid" id="rxnGrid"></div>
+</div></section>
+
+<section id="mech"><div class="wrap">
+  <div class="secH"><h2>Curved-Arrow Mechanisms</h2><p>The four mandatory board mechanisms, animated step by step. Click a step to replay its electron flow.</p></div>
+  <div class="mechTabs" id="mechTabs"></div>
+  <div class="mechStage" id="mechStage"></div>
+  <div class="stepBar">
+    <button class="btn" id="mechPrev">← Prev</button>
+    <button class="btn pri" id="mechNext">Next step →</button>
+    <span class="lbl" id="mechStepLbl"></span>
+  </div>
+  <div class="mechNote" id="mechNote"></div>
+</div></section>
+
+<section id="map"><div class="wrap">
+  <div class="secH"><h2>Conversion Subway Map</h2><p>Functional groups are stations. Click a <b style="color:var(--acc)">green start</b> then a <b style="color:var(--acc2)">pink target</b> — the map lights up a board-valid route with reagents on every edge.</p></div>
+  <div class="mapWrap" id="mapWrap"></div>
+  <div class="mapHint" id="mapHint">Select a start station…</div>
+  <div class="routeBox" id="routeBox"><h4>ROUTE</h4><div class="none">No route traced yet. Pick two stations above.</div></div>
+</div></section>
+
+<section id="matrix"><div class="wrap">
+  <div class="secH"><h2>Selective Reagent Matrix</h2><p>The classic "which reagent does what" confusion, resolved. Colour-coded by job: oxidise, reduce, substitute, eliminate, diagnose.</p></div>
+  <div class="matrixWrap"><table id="matrixTable">
+    <thead><tr><th>Reagent</th><th>Job</th><th>Selectivity / Stops at</th><th>Board trap to avoid</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</div></section>
+
+<section id="tests"><div class="wrap">
+  <div class="secH"><h2>Distinction Tests</h2><p>Observation-first revision: what you add, what you see, what it proves.</p></div>
+  <div class="testGrid" id="testGrid"></div>
+</div></section>
+
+<section id="flash"><div class="wrap">
+  <div class="secH"><h2>Flashcard Decks</h2><p>Click the card to flip. Starred reactions from the library appear in your "Starred" deck automatically.</p></div>
+  <div class="flashZone">
+    <div>
+      <div class="fcCard" id="fcCard"><div class="q" id="fcQ"></div><div class="a" id="fcA"></div><div class="hint">click to flip</div></div>
+      <div class="fcCtrl">
+        <button class="btn" id="fcPrev">←</button>
+        <button class="btn pri" id="fcFlip">Flip</button>
+        <button class="btn" id="fcNext">→</button>
+        <button class="btn" id="fcShuffle">Shuffle</button>
+        <span class="lbl" style="font-family:var(--mono);font-size:12px;color:var(--mut)" id="fcCount"></span>
+      </div>
+    </div>
+    <div class="deckList" id="deckList"></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span class="mono">RXN//BOARD</span> · Class 12 organic chemistry revision engine · All schemes verified against NCERT conditions · <span class="mono">made for board season</span>
+</div></footer>
+
+<script>
+/* ================= DATA ================= */
+const RXNS=[
+ {n:"Finkelstein Reaction",c:"Haloalkanes",e:"R–X + NaI →(dry acetone) R–I + NaX↓",d:"Halogen exchange; NaCl/NaBr precipitate in dry acetone, pulling equilibrium forward (Le Chatelier).",k:"dry acetone, NaI"},
+ {n:"Swarts Reaction",c:"Haloalkanes",e:"R–X + AgF/Hg₂F₂ → R–F",d:"Best route to alkyl fluorides using heavy-metal fluorides.",k:"AgF, heat"},
+ {n:"Wurtz Reaction",c:"Haloalkanes",e:"2 R–X + 2Na →(dry ether) R–R + 2NaX",d:"Symmetric coupling of alkyl halides; fails for 3° halides.",k:"Na, dry ether"},
+ {n:"Wurtz–Fittig Reaction",c:"Haloalkanes",e:"Ar–X + R–X + 2Na → Ar–R + 2NaX",d:"Cross-coupling to alkylbenzenes.",k:"Na, dry ether"},
+ {n:"Fittig Reaction",c:"Haloalkanes",e:"2 Ar–X + 2Na → Ar–Ar + 2NaX",d:"Symmetric biaryl synthesis.",k:"Na, dry ether"},
+ {n:"Sandmeyer Reaction",c:"Haloarenes",e:"Ar–N₂⁺Cl⁻ →(CuCl/HCl) Ar–Cl + N₂↑",d:"Diazonium replacement by Cl/Br/CN using cuprous salts.",k:"Cu₂Cl₂/HCl, Cu₂Br₂/HBr, CuCN/KCN"},
+ {n:"Gattermann Reaction",c:"Haloarenes",e:"Ar–N₂⁺X⁻ →(Cu powder/HX) Ar–X + N₂↑",d:"Sandmeyer variant using finely divided copper instead of cuprous salts.",k:"Cu powder, conc. HX"},
+ {n:"Balz–Schiemann Reaction",c:"Haloarenes",e:"Ar–N₂⁺BF₄⁻ →(Δ) Ar–F + BF₃↑ + N₂↑",d:"Only reliable lab route to fluorobenzene via diazonium tetrafluoroborate.",k:"HBF₄, then heat"},
+ {n:"Ullmann Reaction",c:"Haloarenes",e:"2 Ar–I + 2Cu →(sealed tube, Δ) Ar–Ar + 2CuI",d:"Copper-mediated biaryl coupling of aryl iodides.",k:"Cu, sealed tube, heat"},
+ {n:"Grignard Formation & Hydrolysis",c:"Haloalkanes",e:"R–X + Mg →(dry ether) R–MgX;  R–MgX + H₂O → R–H",d:"Organomagnesium formation; water destroys it — always anhydrous.",k:"Mg, dry ether; H₃O⁺ workup"},
+ {n:"Corey–House Synthesis",c:"Haloalkanes",e:"2 R–Li + CuI → R₂CuLi; R₂CuLi + R'–X → R–R'",d:"Gilman reagents couple to make unsymmetrical alkanes.",k:"Li, CuI; then alkyl halide"},
+ {n:"Markovnikov Addition",c:"Haloalkanes",e:"CH₃–CH=CH₂ + HBr → CH₃–CHBr–CH₃",d:"H adds to the carbon with more H; via more stable carbocation.",k:"HBr, no peroxide"},
+ {n:"Kharasch Peroxide Effect",c:"Haloalkanes",e:"CH₃–CH=CH₂ + HBr →(ROOR) CH₃–CH₂–CH₂Br",d:"Anti-Markovnikov radical addition of HBr only (not HCl/HI).",k:"organic peroxide, HBr"},
+ {n:"Zaitsev Elimination",c:"Haloalkanes",e:"CH₃–CHBr–CH₂–CH₃ →(alc. KOH, Δ) CH₃–CH=CH–CH₃ (81%)",d:"Dehydrohalogenation gives the more substituted alkene.",k:"alcoholic KOH, heat"},
+ {n:"Haloform / Iodoform Reaction",c:"Haloalkanes",e:"CH₃CO–R + 3I₂ + 4NaOH → CHI₃↓ (yellow) + RCOONa",d:"Positive for methyl ketones and CH₃CH(OH)–R; canary-yellow ppt.",k:"I₂/NaOH (warm)"},
+ {n:"Hydroboration–Oxidation",c:"Alcohols",e:"R–CH=CH₂ →(1) BH₃ (2) H₂O₂/OH⁻ R–CH₂–CH₂OH",d:"Anti-Markovnikov, syn hydration; no carbocation rearrangement.",k:"BH₃·THF, then H₂O₂/OH⁻"},
+ {n:"Oxymercuration–Demercuration",c:"Alcohols",e:"alkene →(1) Hg(OAc)₂/H₂O (2) NaBH₄ Markovnikov alcohol",d:"Rearrangement-free Markovnikov hydration.",k:"Hg(OAc)₂, H₂O/THF; NaBH₄"},
+ {n:"Lucas Test",c:"Alcohols",e:"R–OH + HCl/ZnCl₂ → R–Cl (turbidity)",d:"3° instant, 2° ~5 min, 1° only on heating.",k:"conc. HCl + anhyd. ZnCl₂"},
+ {n:"Victor Meyer Test",c:"Alcohols",e:"ROH → RI → RNO₂ →(HNO₂/NaOH) colour",d:"1° blood red, 2° blue, 3° colourless.",k:"P/I₂, AgNO₂, HNO₂, NaOH"},
+ {n:"Williamson Ether Synthesis",c:"Ethers",e:"RONa + R'–X → R–O–R' + NaX",d:"SN2 — works best with 1° halides; 3° gives elimination only.",k:"alkoxide + 1° alkyl halide"},
+ {n:"Zeisel's Method",c:"Ethers",e:"R–O–R' + 2HI →(373 K) RI + R'I + H₂O",d:"Ether cleavage; anisole gives phenol + CH₃I (Ar–O bond survives).",k:"conc. HI, 373 K"},
+ {n:"Fries Rearrangement",c:"Phenols",e:"Ar–OCOCH₃ →(AlCl₃, Δ) o-/p-HO–Ar–COCH₃",d:"Phenolic esters → hydroxy ketones; low T favours para, high T ortho.",k:"anhyd. AlCl₃, heat"},
+ {n:"Reimer–Tiemann Reaction",c:"Phenols",e:"C₆H₅OH + CHCl₃ + 3NaOH →(Δ, H⁺) o-HO–C₆H₄–CHO",d:"Formylation of phenol via :CCl₂ carbene; ortho major.",k:"CHCl₃, NaOH, 340 K; then H⁺"},
+ {n:"Kolbe–Schmitt Reaction",c:"Phenols",e:"C₆H₅ONa + CO₂ →(400 K, 4–7 atm; H⁺) salicylic acid",d:"Carboxylation of sodium phenoxide → ortho product.",k:"CO₂ under pressure, then acidify"},
+ {n:"Dow's Process",c:"Phenols",e:"C₆H₅Cl + 2NaOH →(623 K, 300 atm) C₆H₅ONa →(H⁺) C₆H₅OH",d:"Industrial phenol from chlorobenzene via benzyne.",k:"NaOH, 623 K, 300 atm"},
+ {n:"Cumene Process",c:"Phenols",e:"cumene →(O₂) cumene hydroperoxide →(H⁺) phenol + acetone",d:"Industrial phenol; acetone is the valuable co-product.",k:"O₂, then dil. H₂SO₄"},
+ {n:"Friedel–Crafts Alkylation",c:"Arenes",e:"C₆H₆ + R–Cl →(AlCl₃) C₆H₅R + HCl",d:"Electrophilic substitution; polyalkylation & rearrangement possible.",k:"R–Cl, anhyd. AlCl₃"},
+ {n:"Friedel–Crafts Acylation",c:"Arenes",e:"C₆H₆ + RCOCl →(AlCl₃) C₆H₅COR + HCl",d:"No rearrangement, no polyacylation (product deactivates ring).",k:"RCOCl, anhyd. AlCl₃"},
+ {n:"Gattermann–Koch Formylation",c:"Arenes",e:"C₆H₆ + CO + HCl →(AlCl₃/CuCl) C₆H₅CHO",d:"Direct formylation of benzene to benzaldehyde.",k:"CO + HCl, AlCl₃/CuCl"},
+ {n:"Etard Reaction",c:"Arenes",e:"C₆H₅CH₃ →(CrO₂Cl₂) C₆H₅CHO",d:"Toluene → benzaldehyde with chromyl chloride.",k:"CrO₂Cl₂, CS₂"},
+ {n:"Aldol Condensation",c:"Carbonyls",e:"2 CH₃CHO →(dil. NaOH) CH₃CH(OH)CH₂CHO →(Δ) CH₃CH=CHCHO",d:"Needs α-H; dilute base, then heat dehydrates.",k:"dil. NaOH, warm"},
+ {n:"Cannizzaro Reaction",c:"Carbonyls",e:"2 HCHO →(conc. NaOH) CH₃OH + HCOONa",d:"No α-H needed; disproportionation — one oxidised, one reduced.",k:"conc. NaOH"},
+ {n:"Crossed Cannizzaro",c:"Carbonyls",e:"HCHO + C₆H₅CHO →(conc. NaOH) CH₃OH + C₆H₅COONa",d:"Formaldehyde is always oxidised to formate in crossed versions.",k:"conc. NaOH"},
+ {n:"Benzoin Condensation",c:"Carbonyls",e:"2 C₆H₅CHO →(NaCN, EtOH) C₆H₅CH(OH)COC₆H₅",d:"Cyanide-catalysed dimerisation of aromatic aldehydes.",k:"NaCN in ethanol"},
+ {n:"Perkin Reaction",c:"Carbonyls",e:"C₆H₅CHO + (CH₃CO)₂O →(CH₃COONa) C₆H₅CH=CHCOOH",d:"Condensation of aromatic aldehyde with acid anhydride → cinnamic acid.",k:"acetic anhydride, CH₃COONa, Δ"},
+ {n:"Knoevenagel Reaction",c:"Carbonyls",e:"RCHO + CH₂(COOH)₂ →(piperidine) RCH=C(COOH)₂",d:"Active methylene + aldehyde; malonic acid classic.",k:"piperidine (base)"},
+ {n:"Clemmensen Reduction",c:"Carbonyls",e:"R₂C=O →(Zn–Hg/HCl) R₂CH₂",d:"Reduces C=O to CH₂ under acidic conditions.",k:"Zn(Hg), conc. HCl"},
+ {n:"Wolff–Kishner Reduction",c:"Carbonyls",e:"R₂C=O →(NH₂NH₂/KOH, Δ) R₂CH₂",d:"Reduces C=O to CH₂ under basic conditions.",k:"hydrazine, KOH, ethylene glycol, Δ"},
+ {n:"Tollens' Test",c:"Carbonyls",e:"RCHO + 2[Ag(NH₃)₂]⁺ → RCOO⁻ + 2Ag↓ + …",d:"Aldehydes give silver mirror; ketones do not.",k:"ammoniacal AgNO₃"},
+ {n:"Fehling's / Benedict's Test",c:"Carbonyls",e:"RCHO + 2Cu²⁺ →(alkaline) RCOO⁻ + Cu₂O↓ (red)",d:"Aliphatic aldehydes give brick-red ppt; aromatic aldehydes & ketones negative.",k:"Fehling A + B, warm"},
+ {n:"Schiff's Test",c:"Carbonyls",e:"RCHO + Schiff's reagent → pink/magenta",d:"Aldehydes restore pink colour; ketones do not.",k:"Schiff's reagent"},
+ {n:"HVZ Reaction",c:"Carboxylic Acids",e:"RCH₂COOH →(X₂/red P) RCHXCOOH",d:"α-Halogenation of carboxylic acids via enol.",k:"Cl₂/Br₂, red P"},
+ {n:"Decarboxylation (Soda Lime)",c:"Carboxylic Acids",e:"CH₃COONa + NaOH →(CaO, Δ) CH₄ + Na₂CO₃",d:"Sodium salt + soda lime removes –COONa as CO₂.",k:"NaOH/CaO, heat"},
+ {n:"Kolbe's Electrolysis",c:"Carboxylic Acids",e:"2 CH₃COONa →(electrolysis) C₂H₆ + 2CO₂ + H₂ + 2NaOH",d:"Anodic decarboxylative dimerisation.",k:"electrolysis of conc. sodium acetate"},
+ {n:"Rosenmund Reduction",c:"Carboxylic Acids",e:"RCOCl + H₂ →(Pd/BaSO₄) RCHO + HCl",d:"Acid chloride → aldehyde; poisoned catalyst stops reduction.",k:"H₂, Pd/BaSO₄, S/quinoline"},
+ {n:"Hofmann Bromamide Degradation",c:"Amines",e:"RCONH₂ + Br₂ + 4NaOH → RNH₂ + Na₂CO₃ + 2NaBr",d:"Amide → primary amine with one fewer carbon (step-down).",k:"Br₂, NaOH"},
+ {n:"Gabriel Phthalimide Synthesis",c:"Amines",e:"phthalimide →(KOH; R–X; NH₂NH₂) R–NH₂",d:"Pure 1° aliphatic amines only.",k:"KOH, then R–X, then hydrazine"},
+ {n:"Carbylamine Reaction",c:"Amines",e:"RNH₂ + CHCl₃ + 3KOH →(Δ) R–NC (foul) + 3KCl",d:"Test for 1° amines; foul isocyanide smell.",k:"CHCl₃, alc. KOH, heat"},
+ {n:"Diazotisation",c:"Amines",e:"C₆H₅NH₂ + NaNO₂ + 2HCl →(273–278 K) C₆H₅N₂⁺Cl⁻",d:"1° aromatic amine → diazonium salt; keep below 278 K.",k:"NaNO₂/HCl, 0–5 °C"},
+ {n:"Coupling (Azo Dye)",c:"Amines",e:"C₆H₅N₂⁺Cl⁻ + C₆H₅OH →(pH 9–10) p-HO–C₆H₄–N=N–C₆H₅",d:"Diazonium + phenol/aniline → orange azo dye.",k:"weakly alkaline, 273–278 K"},
+ {n:"Hoffmann's Exhaustive Methylation",c:"Amines",e:"RNH₂ →(excess CH₃I, Ag₂O, Δ) alkene + N(CH₃)₃",d:"Amine → least substituted alkene (Hoffmann product).",k:"CH₃I, moist Ag₂O, heat"},
+ {n:"Stephen Reduction",c:"Nitriles",e:"RCN →(SnCl₂/HCl) imine →(H₂O) RCHO",d:"Nitrile → aldehyde via imine intermediate.",k:"SnCl₂/HCl, then hydrolysis"},
+ {n:"Wacker Oxidation",c:"Alkenes",e:"CH₂=CH₂ + ½O₂ →(PdCl₂/CuCl₂) CH₃CHO",d:"Industrial acetaldehyde from ethylene.",k:"PdCl₂, CuCl₂"},
+ {n:"Ozonolysis",c:"Alkenes",e:"RCH=CHR' →(1) O₃ (2) Zn/H₂O) RCHO + R'CHO",d:"Cleaves C=C; reductive workup (Zn) gives aldehydes not acids.",k:"O₃, then Zn/H₂O"},
+ {n:"Birnbaum–Simonini Reaction",c:"Haloalkanes",e:"2 RCOOAg + I₂ →(Δ) RCOOR + CO₂↑ + 2AgI↓",d:"Hunsdiecker variant with iodine gives esters (2:1 ratio).",k:"I₂, 2:1 silver carboxylate, heat"},
+ {n:"Darzens Process",c:"Haloalkanes",e:"ROH + SOCl₂ →(pyridine) RCl + SO₂↑ + HCl↑",d:"Pure alkyl chlorides — both by-products are gases.",k:"SOCl₂, pyridine"},
+ {n:"Pinacol–Pinacolone Rearrangement",c:"Alcohols",e:"(CH₃)₂C(OH)–C(OH)(CH₃)₂ →(H⁺, Δ) pinacolone",d:"1,2-methyl shift in vicinal diols → ketone.",k:"conc. H₂SO₄, heat"},
+ {n:"Claisen Rearrangement",c:"Ethers",e:"allyl aryl ether →(200 °C) o-allylphenol",d:"[3,3]-sigmatropic shift of allyl aryl ethers.",k:"heat ~200 °C"},
+ {n:"Lederer–Manasse Reaction",c:"Phenols",e:"C₆H₅OH + HCHO →(H⁺/OH⁻) o-/p-HO–C₆H₄–CH₂OH",d:"Phenol + formaldehyde → Bakelite monomers.",k:"acid or base catalyst"},
+ {n:"Elbs Persulfate Oxidation",c:"Phenols",e:"C₆H₅OH + K₂S₂O₈ →(OH⁻; H₃O⁺) hydroquinone",d:"Para-hydroxylation of phenols.",k:"K₂S₂O₈, alkaline"},
+ {n:"Dakin Reaction",c:"Phenols",e:"o-HO–C₆H₄–CHO + H₂O₂ →(OH⁻) catechol",d:"Oxidises o-/p-hydroxy benzaldehydes to dihydric phenols.",k:"H₂O₂, NaOH"},
+ {n:"Fremy's Salt Oxidation",c:"Phenols",e:"C₆H₅OH →(Na₂Cr₂O₇/H₂SO₄ or Fremy's salt) p-benzoquinone",d:"Strong oxidation of phenol to quinone.",k:"acidic dichromate or Fremy's salt"},
+];
+
+const CATS=["All","Haloalkanes","Haloarenes","Alcohols","Phenols","Ethers","Arenes","Alkenes","Carbonyls","Carboxylic Acids","Amines","Nitriles"];
+/* ================= LIBRARY ================= */
+const grid=document.getElementById('rxnGrid'), filt=document.getElementById('rxnFilters'), search=document.getElementById('rxnSearch');
+let activeCat="All";
+CATS.forEach(c=>{const b=document.createElement('span');b.className='chip'+(c==='All'?' on':'');b.textContent=c;b.onclick=()=>{activeCat=c;document.querySelectorAll('#rxnFilters .chip').forEach(x=>x.classList.remove('on'));b.classList.add('on');renderRxn();};filt.appendChild(b);});
+search.addEventListener('input',renderRxn);
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+let starred=new Set(JSON.parse(localStorage.getItem('rxnStars')||'[]'));
+function saveStars(){localStorage.setItem('rxnStars',JSON.stringify([...starred]));}
+function renderRxn(){
+  const q=search.value.toLowerCase();
+  grid.innerHTML='';
+  RXNS.filter(r=>(activeCat==='All'||r.c===activeCat)&&(r.n.toLowerCase().includes(q)||r.e.toLowerCase().includes(q)||r.k.toLowerCase().includes(q)||r.d.toLowerCase().includes(q)))
+  .forEach(r=>{
+    const el=document.createElement('div');el.className='card';
+    el.innerHTML=`<span class="star" title="star for flashcards">☆</span><div class="cat">${r.c}</div><h3>${r.n}</h3><div class="eq">${esc(r.e)}</div><p>${r.d}</p><div class="cond">⚗ ${esc(r.k)}</div>`;
+    const star=el.querySelector('.star');
+    const sync=()=>star.textContent=starred.has(r.n)?'★':'☆';
+    sync();
+    star.onclick=e=>{e.stopPropagation();starred.has(r.n)?starred.delete(r.n):starred.add(r.n);sync();saveStars();renderDecks();};
+    grid.appendChild(el);
+  });
+  if(!grid.children.length)grid.innerHTML='<div style="color:var(--mut);padding:20px">No reactions match — try another keyword.</div>';
+}
+renderRxn();
+
+/* ================= MECHANISMS ================= */
+const MECHS={
+ "S_N2 — one-step backside attack":{
+  steps:[
+   {note:"Hydroxide approaches the methyl carbon from the side opposite the C–Br bond (backside attack). The three other groups flip like an umbrella — inversion of configuration.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="70" y="60" font-size="13" fill="#8b94ad" font-family="monospace">HO⁻</text><line x1="100" y1="70" x2="150" y2="110" stroke="#5eead4" stroke-width="2" class="arrowPath" marker-end="url(#ah)"/><text x="185" y="120" font-size="20" fill="#e8ecf6" font-family="monospace">C</text><line x1="195" y1="112" x2="245" y2="70" stroke="#8b94ad" stroke-width="2"/><text x="252" y="66" font-size="13" fill="#8b94ad" font-family="monospace">H</text><line x1="195" y1="128" x2="245" y2="170" stroke="#8b94ad" stroke-width="2"/><text x="252" y="182" font-size="13" fill="#8b94ad" font-family="monospace">H</text><line x1="205" y1="120" x2="265" y2="120" stroke="#8b94ad" stroke-width="2"/><text x="272" y="125" font-size="13" fill="#8b94ad" font-family="monospace">H</text><line x1="178" y1="120" x2="130" y2="120" stroke="#fb7185" stroke-width="2"/><text x="100" y="125" font-size="13" fill="#fb7185" font-family="monospace">Br</text><path d="M 120 105 Q 150 90 178 108" stroke="#fb7185" stroke-width="2" fill="none" class="arrowPath" marker-end="url(#ah2)"/><text x="330" y="120" font-size="24" fill="#5eead4">→</text><text x="380" y="60" font-size="13" fill="#8b94ad" font-family="monospace">HO–C–H</text><text x="380" y="90" font-size="13" fill="#8b94ad" font-family="monospace">    |</text><text x="380" y="120" font-size="13" fill="#8b94ad" font-family="monospace">    H</text><text x="380" y="150" font-size="13" fill="#fb7185" font-family="monospace">+ Br⁻</text><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#5eead4"/></marker><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#fb7185"/></marker></defs></svg>'},
+   {note:"Transition state: the C–OH bond is half-formed and C–Br half-broken. Rate = k[RX][Nu⁻] — second order. Favoured for CH₃X and 1° halides; impossible for 3°.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="120" y="120" font-size="20" fill="#5eead4" font-family="monospace">HO</text><line x1="152" y1="112" x2="200" y2="112" stroke="#5eead4" stroke-width="2" stroke-dasharray="4 4"/><text x="208" y="120" font-size="20" fill="#e8ecf6" font-family="monospace">C</text><line x1="216" y1="104" x2="262" y2="66" stroke="#8b94ad" stroke-width="2"/><text x="270" y="62" font-size="13" fill="#8b94ad" font-family="monospace">H</text><line x1="216" y1="136" x2="262" y2="174" stroke="#8b94ad" stroke-width="2"/><text x="270" y="186" font-size="13" fill="#8b94ad" font-family="monospace">H</text><line x1="226" y1="120" x2="284" y2="120" stroke="#8b94ad" stroke-width="2"/><text x="292" y="125" font-size="13" fill="#8b94ad" font-family="monospace">H</text><line x1="196" y1="120" x2="152" y2="120" stroke="#fb7185" stroke-width="2" stroke-dasharray="4 4"/><text x="110" y="125" font-size="20" fill="#fb7185" font-family="monospace">Br</text><text x="200" y="200" font-size="12" fill="#8b94ad" font-family="monospace">[HO···CH₃···Br]‡</text></svg>'}
+  ]},
+ "S_N1 — two-step via carbocation":{
+  steps:[
+   {note:"Step 1 (slow, rate-determining): the C–Br bond breaks on its own, giving a planar tertiary carbocation and bromide ion. Rate = k[RX] only.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="90" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">(CH₃)₃C–Br</text><path d="M 230 105 Q 260 90 290 108" stroke="#fb7185" stroke-width="2" fill="none" class="arrowPath" marker-end="url(#ah2)"/><text x="320" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">(CH₃)₃C⁺  +  Br⁻</text><text x="320" y="150" font-size="12" fill="#8b94ad" font-family="monospace">planar carbocation</text><defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#fb7185"/></marker></defs></svg>'},
+   {note:"Step 2 (fast): water attacks the flat carbocation from either face — hence racemisation. Proton loss gives the alcohol.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="70" y="70" font-size="13" fill="#5eead4" font-family="monospace">H₂O:</text><line x1="110" y1="78" x2="160" y2="112" stroke="#5eead4" stroke-width="2" class="arrowPath" marker-end="url(#ah)"/><text x="195" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">(CH₃)₃C⁺</text><text x="330" y="120" font-size="18" fill="#5eead4">→</text><text x="370" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">(CH₃)₃C–OH₂⁺</text><path d="M 420 140 Q 430 175 400 185" stroke="#f0abfc" stroke-width="2" fill="none" class="arrowPath" marker-end="url(#ah3)"/><text x="370" y="205" font-size="18" fill="#e8ecf6" font-family="monospace">(CH₃)₃C–OH + H⁺</text><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#5eead4"/></marker><marker id="ah3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#f0abfc"/></marker></defs></svg>'}
+  ]},
+ "Alcohol dehydration (E1, conc. H2SO4)":{
+  steps:[
+   {note:"Protonation of –OH turns it into –OH₂⁺, an excellent leaving group. This is why conc. H₂SO₄ is required.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="80" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH₂–OH</text><text x="90" y="70" font-size="13" fill="#f0abfc" font-family="monospace">H⁺</text><line x1="105" y1="80" x2="140" y2="105" stroke="#f0abfc" stroke-width="2" class="arrowPath" marker-end="url(#ah3)"/><text x="300" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH₂–OH₂⁺</text><defs><marker id="ah3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#f0abfc"/></marker></defs></svg>'},
+   {note:"Loss of water gives the primary carbocation… which immediately rearranges if a more stable ion is available — a favourite board question.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="80" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH₂–OH₂⁺</text><path d="M 240 105 Q 275 90 305 108" stroke="#fb7185" stroke-width="2" fill="none" class="arrowPath" marker-end="url(#ah2)"/><text x="330" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH₂⁺ + H₂O</text><defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#fb7185"/></marker></defs></svg>'},
+   {note:"A base (HSO₄⁻ or water) removes a β-hydrogen; the C–H electrons form the π bond. Zaitsev product dominates for 2°/3° alcohols.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="80" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH₂⁺</text><text x="120" y="70" font-size="13" fill="#5eead4" font-family="monospace">:Base⁻</text><line x1="150" y1="80" x2="185" y2="105" stroke="#5eead4" stroke-width="2" class="arrowPath" marker-end="url(#ah)"/><path d="M 200 105 Q 235 88 268 106" stroke="#5eead4" stroke-width="2" fill="none" class="arrowPath" marker-end="url(#ah)"/><text x="300" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₂=CH₂ + H–Base</text><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#5eead4"/></marker></defs></svg>'}
+  ]},
+ "Fischer esterification":{
+  steps:[
+   {note:"Step 1: protonation of the carbonyl oxygen makes the carbonyl carbon far more electrophilic toward the alcohol's oxygen.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="60" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">R–C(=O)–OH</text><text x="70" y="70" font-size="13" fill="#f0abfc" font-family="monospace">H⁺</text><line x1="90" y1="80" x2="130" y2="105" stroke="#f0abfc" stroke-width="2" class="arrowPath" marker-end="url(#ah3)"/><text x="280" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">R–C(=OH⁺)–OH</text><defs><marker id="ah3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#f0abfc"/></marker></defs></svg>'},
+   {note:"Step 2: the alcohol oxygen attacks the carbonyl carbon; after proton transfers a tetrahedral intermediate forms, then water leaves.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="40" y="70" font-size="13" fill="#5eead4" font-family="monospace">R\u2019–OH</text><line x1="80" y1="78" x2="130" y2="108" stroke="#5eead4" stroke-width="2" class="arrowPath" marker-end="url(#ah)"/><text x="170" y="120" font-size="16" fill="#e8ecf6" font-family="monospace">R–C(OH)(O⁺HR\u2019)–OH</text><text x="180" y="160" font-size="12" fill="#8b94ad" font-family="monospace">tetrahedral intermediate</text><text x="360" y="120" font-size="20" fill="#5eead4">→</text><text x="400" y="120" font-size="16" fill="#e8ecf6" font-family="monospace">R–C(=O)–OR\u2019</text><text x="400" y="150" font-size="13" fill="#8b94ad" font-family="monospace">ester</text><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#5eead4"/></marker></defs></svg>'},
+   {note:"Step 3: deprotonation regenerates the acid catalyst. The reaction is reversible — remove water (or use excess alcohol) to drive it forward.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="80" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">R–C(=O)–OR\u2019  +  H₂O</text><text x="330" y="120" font-size="20" fill="#f0abfc">⇌</text><text x="380" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">R–COOH + R\u2019–OH</text><text x="140" y="170" font-size="12" fill="#8b94ad" font-family="monospace">conc. H₂SO₄ = catalyst + dehydrating agent</text></svg>'}
+  ]},
+ "Hydration of alkenes (acid-catalysed)":{
+  steps:[
+   {note:"Step 1: the π bond attacks H₃O⁺. Markovnikov regiochemistry — H adds to the carbon that already has more H, via the more stable carbocation.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="60" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH=CH₂</text><text x="70" y="70" font-size="13" fill="#f0abfc" font-family="monospace">H₃O⁺</text><path d="M 150 108 Q 185 92 218 108" stroke="#f0abfc" stroke-width="2" fill="none" class="arrowPath" marker-end="url(#ah3)"/><text x="250" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH⁺–CH₃</text><text x="255" y="150" font-size="12" fill="#8b94ad" font-family="monospace">2° carbocation (Markovnikov)</text><defs><marker id="ah3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#f0abfc"/></marker></defs></svg>'},
+   {note:"Step 2: water attacks the carbocation; deprotonation gives the alcohol. Rearrangements are possible — contrast with oxymercuration, which avoids them.",
+    svg:'<svg width="520" height="240" viewBox="0 0 520 240"><text x="40" y="70" font-size="13" fill="#5eead4" font-family="monospace">H₂O:</text><line x1="75" y1="80" x2="120" y2="108" stroke="#5eead4" stroke-width="2" class="arrowPath" marker-end="url(#ah)"/><text x="150" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH(OH₂⁺)–CH₃</text><text x="370" y="120" font-size="20" fill="#f0abfc">→</text><text x="410" y="120" font-size="18" fill="#e8ecf6" font-family="monospace">CH₃–CH(OH)–CH₃</text><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#5eead4"/></marker></defs></svg>'}
+  ]}
+};
+let mechName=Object.keys(MECHS)[0], mechStep=0;
+const mechTabs=document.getElementById('mechTabs'), mechStage=document.getElementById('mechStage'), mechNote=document.getElementById('mechNote'), mechLbl=document.getElementById('mechStepLbl');
+Object.keys(MECHS).forEach(k=>{const b=document.createElement('span');b.className='chip';b.textContent=k;b.onclick=()=>{mechName=k;mechStep=0;renderMech();};mechTabs.appendChild(b);});
+function renderMech(){const m=MECHS[mechName];mechStage.innerHTML=m.steps[mechStep].svg;mechNote.textContent=m.steps[mechStep].note;mechLbl.textContent='Step '+(mechStep+1)+' / '+m.steps.length;[...mechTabs.children].forEach(b=>b.classList.toggle('on',b.textContent===mechName));}
+document.getElementById('mechNext').onclick=()=>{mechStep=Math.min(mechStep+1,MECHS[mechName].steps.length-1);renderMech();};
+document.getElementById('mechPrev').onclick=()=>{mechStep=Math.max(mechStep-1,0);renderMech();};
+renderMech();
+/* ================= CONVERSION MAP ================= */
+const NODES=[
+ {id:"alkene",x:150,y:90,l:"Alkene"},
+ {id:"alkylhalide",x:150,y:230,l:"Alkyl halide"},
+ {id:"alcohol",x:150,y:370,l:"Alcohol"},
+ {id:"ether",x:150,y:510,l:"Ether"},
+ {id:"aldehyde",x:400,y:90,l:"Aldehyde"},
+ {id:"ketone",x:400,y:230,l:"Ketone"},
+ {id:"acid",x:400,y:370,l:"Carboxylic acid"},
+ {id:"ester",x:400,y:510,l:"Ester"},
+ {id:"acidchloride",x:650,y:90,l:"Acid chloride"},
+ {id:"amide",x:650,y:230,l:"Amide"},
+ {id:"amine",x:650,y:370,l:"1° Amine"},
+ {id:"nitrile",x:650,y:510,l:"Nitrile"},
+ {id:"arene",x:900,y:90,l:"Arene"},
+ {id:"phenol",x:900,y:230,l:"Phenol"},
+ {id:"haloarene",x:900,y:370,l:"Haloarene"},
+ {id:"diazonium",x:900,y:510,l:"Diazonium salt"},
+];
+const EDGES=[
+ {a:"alkene",b:"alcohol",r:"H₃O⁺ (Mark.) or BH₃/H₂O₂ (anti-M)"},
+ {a:"alcohol",b:"alkene",r:"conc. H₂SO₄, 170 °C"},
+ {a:"alkene",b:"alkylhalide",r:"HX"},
+ {a:"alkylhalide",b:"alkene",r:"alc. KOH, Δ"},
+ {a:"alkylhalide",b:"alcohol",r:"aq. KOH"},
+ {a:"alcohol",b:"alkylhalide",r:"SOCl₂ or PCl₅"},
+ {a:"alcohol",b:"ether",r:"conc. H₂SO₄, 140 °C"},
+ {a:"alcohol",b:"aldehyde",r:"PCC (1° only)"},
+ {a:"alcohol",b:"ketone",r:"[O] (2° only)"},
+ {a:"aldehyde",b:"acid",r:"Tollens' / KMnO₄"},
+ {a:"ketone",b:"acid",r:"hot KMnO₄ (C–C cleavage)"},
+ {a:"acid",b:"ester",r:"R'–OH / H⁺"},
+ {a:"acidchloride",b:"ester",r:"R'–OH"},
+ {a:"acid",b:"acidchloride",r:"SOCl₂"},
+ {a:"acidchloride",b:"amide",r:"NH₃"},
+ {a:"amide",b:"amine",r:"Br₂/NaOH (Hofmann)"},
+ {a:"acidchloride",b:"aldehyde",r:"H₂/Pd-BaSO₄ (Rosenmund)"},
+ {a:"aldehyde",b:"alcohol",r:"NaBH₄ or LiAlH₄"},
+ {a:"ketone",b:"alcohol",r:"NaBH₄ / LiAlH₄"},
+ {a:"acid",b:"alcohol",r:"LiAlH₄"},
+ {a:"ester",b:"alcohol",r:"LiAlH₄"},
+ {a:"alkylhalide",b:"nitrile",r:"KCN (good) / AgCN (isocyanide)"},
+ {a:"nitrile",b:"acid",r:"H₃O⁺, Δ"},
+ {a:"nitrile",b:"amine",r:"LiAlH₄"},
+ {a:"nitrile",b:"aldehyde",r:"SnCl₂/HCl (Stephen)"},
+ {a:"arene",b:"haloarene",r:"X₂/FeX₃"},
+ {a:"haloarene",b:"phenol",r:"NaOH, 623 K/300 atm (Dow)"},
+ {a:"phenol",b:"haloarene",r:"via diazonium + Sandmeyer"},
+ {a:"arene",b:"acid",r:"KMnO₄, Δ (side chain → COOH)"},
+ {a:"amine",b:"diazonium",r:"NaNO₂/HCl, 0–5 °C"},
+ {a:"diazonium",b:"phenol",r:"H₂O, warm"},
+ {a:"diazonium",b:"haloarene",r:"CuCl/HCl (Sandmeyer)"},
+ {a:"phenol",b:"arene",r:"Zn dust, Δ"},
+];
+const nodeById={};NODES.forEach(n=>nodeById[n.id]=n);
+const adj={};NODES.forEach(n=>adj[n.id]=[]);EDGES.forEach(e=>{adj[e.a].push({to:e.b,edge:e});adj[e.b].push({to:e.a,edge:e});});
+let selA=null,selB=null;
+const svgNS="http://www.w3.org/2000/svg";
+const mapSvg=document.createElementNS(svgNS,"svg");
+mapSvg.setAttribute("viewBox","0 0 1050 600");mapSvg.setAttribute("width","100%");
+EDGES.forEach(e=>{
+  const A=nodeById[e.a],B=nodeById[e.b];
+  const mx=(A.x+B.x)/2,my=(A.y+B.y)/2;
+  const dx=B.x-A.x,dy=B.y-A.y,len=Math.hypot(dx,dy)||1;
+  const off=16, nx=-dy/len*off, ny=dx/len*off;
+  const path=document.createElementNS(svgNS,"path");
+  path.setAttribute("d","M "+(A.x+dx/len*30)+" "+(A.y+dy/len*30)+" Q "+(mx+nx)+" "+(my+ny)+" "+(B.x-dx/len*30)+" "+(B.y-dy/len*30));
+  path.setAttribute("class","edge");path.dataset.a=e.a;path.dataset.b=e.b;
+  mapSvg.appendChild(path);
+  const t=document.createElementNS(svgNS,"text");
+  t.setAttribute("x",mx+nx);t.setAttribute("y",my+ny-5);t.setAttribute("class","edgeLbl");t.setAttribute("text-anchor","middle");
+  t.textContent=e.r.length>36?e.r.slice(0,35)+"…":e.r;
+  mapSvg.appendChild(t);
+});
+NODES.forEach(n=>{
+  const g=document.createElementNS(svgNS,"g");g.setAttribute("class","stn");g.dataset.id=n.id;
+  const c=document.createElementNS(svgNS,"circle");c.setAttribute("cx",n.x);c.setAttribute("cy",n.y);c.setAttribute("r",26);
+  const t=document.createElementNS(svgNS,"text");t.setAttribute("x",n.x);t.setAttribute("y",n.y+42);t.textContent=n.l;
+  g.appendChild(c);g.appendChild(t);
+  g.onclick=()=>{
+    if(!selA||selB){selA=n.id;selB=null;}
+    else if(selA===n.id){selA=null;selB=null;}
+    else selB=n.id;
+    paint();trace();
+  };
+  mapSvg.appendChild(g);
+});
+document.getElementById('mapWrap').appendChild(mapSvg);
+function paint(){
+  mapSvg.querySelectorAll(".stn").forEach(g=>{g.classList.toggle("selA",g.dataset.id===selA);g.classList.toggle("selB",g.dataset.id===selB);});
+  mapSvg.querySelectorAll(".edge").forEach(p=>p.classList.remove("hit"));
+  const hint=document.getElementById('mapHint');
+  if(!selA)hint.textContent="Select a start station…";
+  else if(!selB)hint.textContent="Start: "+nodeById[selA].l+" — now pick a target station.";
+  else hint.textContent="Route: "+nodeById[selA].l+" → "+nodeById[selB].l;
+}
+function bfs(a,b){
+  const prev={};prev[a]=null;const q=[a];
+  while(q.length){const u=q.shift();if(u===b)break;
+    for(const {to} of adj[u])if(!(to in prev)){prev[to]=u;q.push(to);}}
+  if(!(b in prev))return null;
+  const path=[];let cur=b;while(cur){path.unshift(cur);cur=prev[cur];}
+  const steps=[];
+  for(let i=0;i<path.length-1;i++){
+    const e=EDGES.find(x=>(x.a===path[i]&&x.b===path[i+1])||(x.b===path[i]&&x.a===path[i+1]));
+    steps.push({from:path[i],to:path[i+1],r:e.r});
+  }
+  return steps;
+}
+function trace(){
+  const box=document.getElementById('routeBox');
+  if(!selA||!selB){box.innerHTML='<h4>ROUTE</h4><div class="none">No route traced yet. Pick two stations above.</div>';return;}
+  const steps=bfs(selA,selB);
+  if(!steps){box.innerHTML='<h4>ROUTE</h4><div class="none">No board-syllabus route in the graph yet — try a nearby station as a hop.</div>';return;}
+  mapSvg.querySelectorAll(".edge").forEach(p=>{
+    for(const s of steps){if((p.dataset.a===s.from&&p.dataset.b===s.to)||(p.dataset.b===s.from&&p.dataset.a===s.to)){p.classList.add("hit");}}
+  });
+  box.innerHTML='<h4>ROUTE · '+steps.length+' step'+(steps.length>1?'s':'')+'</h4><ol>'+
+    steps.map(s=>'<li><b style="color:var(--acc)">'+nodeById[s.from].l+'</b> <span style="color:var(--mut)">— '+s.r+' →</span> <b style="color:var(--acc2)">'+nodeById[s.to].l+'</b></li>').join('')+'</ol>';
+}
+paint();
+
+/* ================= REAGENT MATRIX ================= */
+const MATRIX=[
+ {r:"PCC (Corey's reagent)",j:"ox",t:"OXIDISE",s:"1° alcohol → aldehyde (stops); 2° → ketone. Anhydrous CH₂Cl₂.",x:"Never over-oxidises — that's its whole point. For acids you need Jones instead."},
+ {r:"Jones (CrO₃/H₂SO₄/acetone)",j:"ox",t:"OXIDISE",s:"1° alcohol → carboxylic acid; 2° → ketone.",x:"Aqueous conditions = the aldehyde hydrates and keeps oxidising. Don't pick it when the answer is 'stops at aldehyde'."},
+ {r:"Alkaline KMnO₄ (Baeyer's)",j:"ox",t:"OXIDISE",s:"Alkenes → vicinal diols (cold, dilute); hot/conc. cleaves C=C and oxidises side chains of arenes → COOH.",x:"Cold dilute = syn diol. Hot = oxidative cleavage — read the temperature in the question."},
+ {r:"Tollens' reagent",j:"dia",t:"DIAGNOSE",s:"Aldehydes → silver mirror. Ketones: no reaction.",x:"Aromatic aldehydes DO give Tollens' positive — but Fehling's negative. Classic distinction pair."},
+ {r:"Fehling's / Benedict's",j:"dia",t:"DIAGNOSE",s:"Aliphatic aldehydes → brick-red Cu₂O. Aromatic aldehydes & ketones: negative.",x:"Benzaldehyde gives Tollens' (+) but Fehling's (−) — the single most-asked distinction in the chapter."},
+ {r:"NaBH₄",j:"rd",t:"REDUCE",s:"Reduces aldehydes & ketones → alcohols. Does NOT touch acids, esters, amides.",x:"Mild, selective, works in water/alcohol. If the substrate is an ester, NaBH₄ is the wrong answer — use LiAlH₄."},
+ {r:"LiAlH₄ (LAH)",j:"rd",t:"REDUCE",s:"Reduces almost everything: acids, esters, amides, nitriles, aldehydes, ketones → alcohols / amines.",x:"Explodes with water — always dry ether, then aqueous workup. Can't stop at the aldehyde."},
+ {r:"H₂ / Ni (Sabatier–Senderens)",j:"rd",t:"REDUCE",s:"Alkenes → alkanes; carbonyls → alcohols under pressure.",x:"Will also reduce C=C if present — poor chemoselectivity compared with NaBH₄."},
+ {r:"Zn(Hg)/HCl — Clemmensen",j:"rd",t:"REDUCE",s:"C=O → CH₂. Acidic conditions.",x:"Acid-sensitive substrates (e.g., with OH groups that dehydrate) need Wolff–Kishner instead."},
+ {r:"NH₂NH₂/KOH, Δ — Wolff–Kishner",j:"rd",t:"REDUCE",s:"C=O → CH₂. Basic conditions.",x:"Mirror-image selectivity of Clemmensen: base-labile molecules go here."},
+ {r:"SOCl₂",j:"sub",t:"SUBSTITUTE",s:"Alcohol → alkyl chloride; acid → acid chloride. Gaseous by-products (SO₂, HCl) = pure product.",x:"Darzens process — remember pyridine to mop up HCl."},
+ {r:"PCl₅ / PCl₃",j:"sub",t:"SUBSTITUTE",s:"OH → Cl for both alcohols and acids.",x:"Also converts –COOH → –COCl; SO₂ by-product with PCl₅ is the tell-tale observation question."},
+ {r:"alc. KOH vs aq. KOH",j:"el",t:"ELIMINATE / SUBSTITUTE",s:"Alcoholic KOH → alkene (elimination, Zaitsev). Aqueous KOH → alcohol (substitution).",x:"The solvent decides the product — alcoholic = elimination, aqueous = substitution. Memorise as a pair."},
+ {r:"conc. H₂SO₄ on alcohols",j:"el",t:"ELIMINATE / SUBSTITUATE",s:"170 °C → alkene (dehydration). 140 °C → ether (intermolecular).",x:"Temperature is the entire question. 170 vs 140 °C — the board loves this."},
+ {r:"Br₂/FeBr₃ vs Br₂/hν",j:"sub",t:"SUBSTITUTE",s:"FeBr₃: ring bromination of arenes. hν: allylic/benzylic bromination (Wohl–Ziegler).",x:"Ring vs side chain — the catalyst/light tells you which. NBS is the selective allylic version."},
+ {r:"NaNO₂/HCl, 0–5 °C",j:"dia",t:"DIAZOTISE",s:"1° aromatic amine → diazonium salt. Must stay cold or it hydrolyses to phenol.",x:"Aliphatic 1° amines give N₂ effervescence instead of a stable diazonium — different test entirely."},
+ {r:"KCN vs AgCN (on RX)",j:"sub",t:"SUBSTITUTE",s:"KCN → nitrile (C attacks, C–C bond forms). AgCN → isocyanide (N attacks).",x:"Ambident nucleophile question: KCN is ionic → CN⁻ carbon attacks; AgCN covalent → nitrogen end attacks."},
+ {r:"I₂/NaOH (haloform)",j:"dia",t:"DIAGNOSE",s:"CH₃CO– or CH₃CH(OH)– → yellow CHI₃ precipitate.",x:"Ethanol also gives the test (oxidised to acetaldehyde first) — the classic 'which alcohols respond' trap."},
+];
+const tb=document.querySelector('#matrixTable tbody');
+MATRIX.forEach(m=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td class="rname">'+m.r+'</td><td><span class="pill '+m.j+'">'+m.t+'</span></td><td>'+m.s+'</td><td style="color:var(--mut)">'+m.x+'</td>';
+  tb.appendChild(tr);
+});
+
+/* ================= TESTS ================= */
+const TESTS=[
+ {n:"Lucas Test",f:"1° vs 2° vs 3° alcohols",r:"conc. HCl + anhyd. ZnCl₂",p:"3° → instant turbidity · 2° → turbidity in ~5 min · 1° → clear at RT, turbid only on heating",g:"Based on carbocation stability (SN1) — 3° forms R⁺ fastest."},
+ {n:"Victor Meyer Test",f:"1° vs 2° vs 3° alcohols",r:"P/I₂ → AgNO₂ → HNO₂/NaOH",p:"1° → blood red · 2° → blue · 3° → colourless",g:"3° gives no α-nitro product, so no colour develops."},
+ {n:"Tollens' Test",f:"Aldehyde vs ketone",r:"ammoniacal AgNO₃, warm",p:"Silver mirror (or grey-black Ag deposit)",g:"Aldehyde oxidised to carboxylate; both aliphatic AND aromatic aldehydes respond."},
+ {n:"Fehling's / Benedict's",f:"Aliphatic vs aromatic aldehyde",r:"Fehling A + B, warm",p:"Brick-red Cu₂O precipitate",g:"Benzaldehyde is negative here but positive with Tollens' — use the pair to identify it."},
+ {n:"Iodoform Test",f:"CH₃CO– / CH₃CH(OH)– compounds",r:"I₂ in NaOH, warm",p:"Canary-yellow CHI₃ precipitate, antiseptic smell",g:"Ethanol and 2-propanol respond; methanol and 3°-butyl alcohols do not."},
+ {n:"Schiff's Test",f:"Aldehyde vs ketone",r:"Schiff's reagent (rosaniline + SO₂)",p:"Pink/magenta colour restored",g:"Ketones stay colourless — quick confirmatory test after Tollens'."},
+ {n:"Neutral FeCl₃",f:"Phenol vs alcohol",r:"neutral FeCl₃ solution",p:"Violet colouration (complex [Fe(OC₆H₅)₆]³⁻)",g:"Aliphatic alcohols: no colour. Basis of the phenol identification test."},
+ {n:"Carbylamine Test",f:"1° amine (aliphatic or aromatic)",r:"CHCl₃ + alc. KOH, heat",p:"Foul-smelling isocyanide (carbylamine)",g:"2° and 3° amines do not respond — the test is specific for –NH₂."},
+ {n:"Liebermann's Nitroso Test",f:"Phenol",r:"NaNO₂ + conc. H₂SO₄, then dilute + NaOH",p:"Red colour on dilution → deep blue/green with excess NaOH",g:"The red indophenol intermediate is the giveaway."},
+ {n:"Molisch's Test",f:"Carbohydrates (all)",r:"α-naphthol + conc. H₂SO₄",p:"Violet ring at the junction",g:"General sugar test — even glucose and fructose both respond."},
+ {n:"Seliwanoff's Test",f:"Ketose vs aldose",r:"resorcinol + conc. HCl, heat",p:"Fructose → cherry-red quickly; glucose → pink slowly/dilute",g:"Time and intensity distinguish keto from aldo sugars."},
+ {n:"Biuret Test",f:"Proteins / peptide bonds",r:"NaOH + dilute CuSO₄",p:"Violet/pink colour",g:"Needs at least two peptide bonds — free amino acids are negative."},
+ {n:"Ninhydrin Test",f:"α-amino acids / proteins",r:"ninhydrin, warm",p:"Blue/purple colour (proline → yellow)",g:"Free –NH₂ + ninhydrin → Ruhemann's purple; the proline exception is a favourite."},
+];
+const tg=document.getElementById('testGrid');
+TESTS.forEach(t=>{
+  const el=document.createElement('div');el.className='testCard';
+  el.innerHTML='<h3>'+t.n+'</h3><div class="for">'+t.f+'</div><div class="reag">⚗ '+t.r+'</div><div class="obsPos">✓ '+t.p+'</div><div class="obsNeg">'+t.g+'</div>';
+  tg.appendChild(el);
+});
+
+/* ================= FLASHCARDS ================= */
+let deck="All", fcIdx=0, fcFlip=false;
+function deckCards(){return deck==="Starred"?RXNS.filter(r=>starred.has(r.n)):deck==="All"?RXNS:RXNS.filter(r=>r.c===deck);}
+const fcCard=document.getElementById('fcCard'),fcQ=document.getElementById('fcQ'),fcA=document.getElementById('fcA'),fcCount=document.getElementById('fcCount');
+function renderFC(){
+  const cards=deckCards();
+  if(!cards.length){fcQ.textContent=deck==="Starred"?"No starred reactions yet — tap ☆ on any library card.":"Empty deck.";fcA.textContent="";fcCount.textContent="0 / 0";return;}
+  fcIdx=((fcIdx%cards.length)+cards.length)%cards.length;
+  const c=cards[fcIdx];
+  fcQ.textContent=c.n;fcA.innerHTML='<b style="color:var(--acc)">'+c.e+'</b><br><br>'+c.d+'<br><span style="color:var(--warn);font-family:var(--mono);font-size:12px">⚗ '+c.k+'</span>';
+  fcCard.classList.remove('flip');fcFlip=false;
+  fcCount.textContent=(fcIdx+1)+' / '+cards.length;
+}
+function renderDecks(){
+  const dl=document.getElementById('deckList');dl.innerHTML='';
+  const mk=(name,count)=>{const d=document.createElement('div');d.className='deckItem';d.innerHTML='<span>'+name+'</span><span class="cnt">'+count+' cards</span>';d.onclick=()=>{deck=name;fcIdx=0;renderDecks();renderFC();};if(deck===name)d.style.borderColor='var(--acc)';dl.appendChild(d);};
+  mk("All",RXNS.length);mk("Starred",starred.size);
+  CATS.slice(1).forEach(c=>mk(c,RXNS.filter(r=>r.c===c).length));
+}
+fcCard.onclick=()=>fcCard.classList.toggle('flip');
+document.getElementById('fcFlip').onclick=()=>fcCard.classList.toggle('flip');
+document.getElementById('fcNext').onclick=()=>{fcIdx++;renderFC();};
+document.getElementById('fcPrev').onclick=()=>{fcIdx--;renderFC();};
+document.getElementById('fcShuffle').onclick=()=>{fcIdx=Math.floor(Math.random()*Math.max(deckCards().length,1));renderFC();};
+renderDecks();renderFC();
+
+/* nav highlight */
+const secs=[...document.querySelectorAll('section')];
+window.addEventListener('scroll',()=>{
+  let cur='';secs.forEach(s=>{if(scrollY>=s.offsetTop-120)cur=s.id;});
+  document.querySelectorAll('nav a.nl').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+});
+</script>
+</body>
+</html>
